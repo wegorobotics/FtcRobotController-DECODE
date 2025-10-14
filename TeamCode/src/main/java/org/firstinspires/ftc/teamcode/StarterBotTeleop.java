@@ -29,9 +29,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "StarterBotTeleop", group = "StarterBot")
 //@Disabled
 public class StarterBotTeleop extends OpMode {
-    final double FEED_TIME_SECONDS = 0.20; //The feeder servos run this long when a shot is requested.
+    final double FEED_TIME_SECONDS = 0.30; //The feeder servos run this long when a shot is requested.
     final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
-    final double FULL_SPEED = 1.0;
+    final double FULL_SPEED = -1.0;
 
     /*
      * When we control our launcher motor, we are using encoders. These allow the control system
@@ -39,8 +39,8 @@ public class StarterBotTeleop extends OpMode {
      * velocity. Here we are setting the target, and minimum velocity that the launcher should run
      * at. The minimum velocity is a threshold for determining when to fire.
      */
-    final double LAUNCHER_TARGET_VELOCITY = 1125;
-    final double LAUNCHER_MIN_VELOCITY = 500;
+    final double LAUNCHER_TARGET_VELOCITY = 2800;
+    final double LAUNCHER_MIN_VELOCITY = 2600;
 
     // Declare OpMode members.
     private DcMotor fl_Wheel = null;
@@ -109,9 +109,9 @@ public class StarterBotTeleop extends OpMode {
          * Note: The settings here assume direct drive on left and right wheels. Gear
          * Reduction or 90 Deg drives may require direction flips
          */
-        fr_Wheel.setDirection(DcMotor.Direction.REVERSE);
+        fr_Wheel.setDirection(DcMotor.Direction.FORWARD);
         fl_Wheel.setDirection(DcMotor.Direction.FORWARD);
-        br_Wheel.setDirection(DcMotor.Direction.REVERSE);
+        br_Wheel.setDirection(DcMotor.Direction.FORWARD);
         bl_Wheel.setDirection(DcMotor.Direction.REVERSE);
 
         /*
@@ -133,7 +133,7 @@ public class StarterBotTeleop extends OpMode {
         fl_Wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br_Wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl_Wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launch_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launch_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         /*
          * set Feeders to an initial value to initialize the servo controller
@@ -195,6 +195,9 @@ public class StarterBotTeleop extends OpMode {
             launch_motor.setVelocity(STOP_SPEED);
         }
 
+        double launch_Position = launch_motor.getCurrentPosition();
+        telemetry.addData("launchmotor", launch_Position);
+
         /*
          * Now we call our "Launch" function.
          */
@@ -222,10 +225,10 @@ public class StarterBotTeleop extends OpMode {
         double joystick_direction2 = -1 * Math.atan2(left_y2, left_x2) / 2;
         double joystick_magnitude2 = Math.sqrt((left_x2 * left_x2) + (left_y2 * left_y2)) / 2;
 
-        fr_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
-        br_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
-        fl_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
-        bl_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
+        fr_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
+        br_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
+        fl_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
+        bl_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
 
         /*
          * Show the state and motor powers
@@ -234,6 +237,7 @@ public class StarterBotTeleop extends OpMode {
         telemetry.addData("State", launchState);
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         telemetry.addData("motorSpeed", launch_motor.getVelocity());
+        telemetry.addData("did the code push? ", "yes!");
 
         telemetry.update();
 

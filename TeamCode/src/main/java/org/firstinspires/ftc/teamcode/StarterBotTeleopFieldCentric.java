@@ -233,7 +233,7 @@ public class StarterBotTeleopFieldCentric extends OpMode {
             joystick_turn = (gamepad1.right_stick_x / 2);
         }
 
-        double joystick_direction = -1 * Math.atan2(left_y, left_x) + orientation.getYaw(AngleUnit.RADIANS);
+        double joystick_direction = -1 * Math.atan2(left_y, left_x) - orientation.getYaw(AngleUnit.RADIANS);
         double joystick_magnitude = Math.sqrt((left_x * left_x) + (left_y * left_y));
 
         double left_x2 = gamepad2.left_stick_x / 2;
@@ -242,10 +242,10 @@ public class StarterBotTeleopFieldCentric extends OpMode {
         double joystick_direction2 = -1 * Math.atan2(left_y2, left_x2) / 2;
         double joystick_magnitude2 = Math.sqrt((left_x2 * left_x2) + (left_y2 * left_y2)) / 2;
 
-        fr_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
-        br_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
-        fl_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
-        bl_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
+        fr_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
+        br_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) - (joystick_turn + joystick_turn2) / 2);
+        fl_Wheel.setPower(1 * Math.sin((joystick_direction + joystick_direction2) - (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
+        bl_Wheel.setPower(-1 * Math.sin((joystick_direction + joystick_direction2) + (0.25 * Math.PI)) * (joystick_magnitude + joystick_magnitude2) + (joystick_turn + joystick_turn2) / 2);
 
 
 
